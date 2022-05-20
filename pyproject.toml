@@ -1,0 +1,167 @@
+[build-system]
+requires = ["setuptools"]
+
+[project]
+name = "check-dns-auth"
+description = "Nagios/Icinga plugin for checking authoritative DNS consistency."
+authors = [
+    {name = "Matthew Pounsett", email = "matt@NimbusOps.com"}
+]
+readme = "README.md"
+license = {text = "Apache-2.0"}
+keywords = [
+    "check",
+    "dns",
+    "dnssec",
+    "icinga",
+    "monitoring",
+    "nagios"
+]
+requires-python = ">= 3.9"
+classifiers = [
+    'Development Status :: 2 - Pre-Alpha',
+    'Environment :: Plugins',
+    'Intended Audience :: System Administrators',
+    'Natural Language :: English',
+    'Operating System :: Microsoft :: Windows',
+    'Operating System :: POSIX',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
+    'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python',
+    'Topic :: Internet :: Name Service (DNS)',
+    'Topic :: System :: Monitoring'
+]
+dependencies = [
+    "dnspython",
+    "nagiosplugin"
+]
+dynamic = ["version"]
+
+[project.urls]
+Source = "https://github.com/Nimbus-Operations/check-dns-auth"
+Issues = "https://github.com/Nimbus-Operations/check-dns-auth/issues"
+
+[project.scripts]
+check_dns_auth = "check_dns_auth:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+py-modules = ["check_dns_auth"]
+
+[tool.setuptools.dynamic]
+version = {attr = "check_dns_auth.__version__"}
+
+[dependency-groups]
+dev = [
+    "isort",
+    "mkdocs",
+    "mkdocs-material",
+    "pre-commit",
+    "pymdown-extensions",
+    "pytest",
+    "pytest-cov",
+    "setuptools",
+    "tox"
+]
+lint = [
+    "pytest",
+    "pytest-cov"
+]
+
+[tool.pylint."messages control"]
+max-line-length = 100
+
+[tool.ruff]
+line-length = 100
+respect-gitignore = true
+
+[tool.ruff.lint]
+# more flake8-like
+extend-select = ["E", "E302", "E302", "E501", "F", "W"]
+# ignore = ["E24"]
+ignore = []
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.tox]
+envlist = [
+    "bandit",
+    "clean",
+    "pip-audit",
+    "py310",
+    "py311",
+    "py312",
+    "py313",
+    "py314",
+    "pydocstyle",
+    "pylint",
+    "ruff",
+    "stats"
+]
+skip_missing_interpreters = false
+
+[tool.tox.env_run_base]
+description = "run unit tests"
+commands = [
+    [
+        "pytest",
+        "-v",
+        "--cov=check_dns_auth",
+        "--cov-report=html",
+        "--cov-append",
+        {replace = "posargs", default = ["tests"], extend = true}
+    ]
+]
+dependency_groups = [
+    "lint"
+]
+
+[tool.tox.env.clean]
+description = "clean up old coverage data"
+commands = [["coverage", "erase"]]
+deps = ["coverage"]
+skip_install = true
+
+[tool.tox.env.stats]
+description = "generate coverage report"
+commands = [
+    ["coverage", "report"],
+    ["coverage", "html"]
+]
+deps = ["coverage"]
+skip_install = true
+
+[tool.tox.env.bandit]
+description = "run bandit security scan"
+commands = [["bandit", "-r", "check_dns_auth", "-q"]]
+deps = ["bandit"]
+ignore_errors = true
+
+[tool.tox.env.pip-audit]
+description = "run pip-audit"
+commands = [["pip-audit", "--skip-editable"]]
+deps = ["pip-audit"]
+ignore_errors = true
+
+[tool.tox.env.pydocstyle]
+description = "run pydocstyle"
+commands = [["pydocstyle", "check_dns_auth", "tests"]]
+deps = ["pydocstyle"]
+ignore_errors = true
+
+[tool.tox.env.pylint]
+description = "run pylint"
+commands = [["pylint", "check_dns_auth", "tests"]]
+deps = ["pylint"]
+ignore_errors = true
+
+[tool.tox.env.ruff]
+description = "run ruff"
+commands = [["ruff", "check", "check_dns_auth", "tests"]]
+deps = ["ruff"]
+ignore_errors = true
