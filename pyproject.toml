@@ -17,9 +17,9 @@ keywords = [
     "monitoring",
     "nagios"
 ]
-requires-python = ">= 3.9"
+requires-python = ">= 3.10"
 classifiers = [
-    'Development Status :: 2 - Pre-Alpha',
+    'Development Status :: 5 - Production/Stable',
     'Environment :: Plugins',
     'Intended Audience :: System Administrators',
     'Natural Language :: English',
@@ -30,7 +30,7 @@ classifiers = [
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
-    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.14',
     'Programming Language :: Python',
     'Topic :: Internet :: Name Service (DNS)',
     'Topic :: System :: Monitoring'
@@ -46,20 +46,21 @@ Source = "https://github.com/Nimbus-Operations/check-dns-auth"
 Issues = "https://github.com/Nimbus-Operations/check-dns-auth/issues"
 
 [project.scripts]
-check_dns_auth = "check_dns_auth:main"
+check_dns_auth = "check_dns_auth.cli:main"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
-py-modules = ["check_dns_auth"]
+packages = ["check_dns_auth"]
 
 [tool.setuptools.dynamic]
-version = {attr = "check_dns_auth.__version__"}
+version = {attr = "check_dns_auth.version.__version__"}
 
 [dependency-groups]
 dev = [
     "isort",
     "mkdocs",
     "mkdocs-material",
+    "mypy",
     "pre-commit",
     "pymdown-extensions",
     "pytest",
@@ -67,22 +68,31 @@ dev = [
     "setuptools",
     "tox"
 ]
-lint = [
+test = [
     "pytest",
     "pytest-cov"
 ]
 
-[tool.pylint."messages control"]
+[tool.pylint.format]
 max-line-length = 100
+
+[tool.mypy]
+python_version = "3.10"
+files = ["src/check_dns_auth"]
+warn_unused_configs = true
+check_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = ["nagiosplugin"]
+ignore_missing_imports = true
 
 [tool.ruff]
 line-length = 100
 respect-gitignore = true
 
 [tool.ruff.lint]
-# more flake8-like
-extend-select = ["E", "E302", "E302", "E501", "F", "W"]
-# ignore = ["E24"]
+# more flake8-like; selecting the whole E group includes E501
+extend-select = ["E", "F", "W"]
 ignore = []
 
 [tool.ruff.lint.pydocstyle]
@@ -98,6 +108,7 @@ envlist = [
     "py312",
     "py313",
     "py314",
+    "mypy",
     "pydocstyle",
     "pylint",
     "ruff",
@@ -118,7 +129,7 @@ commands = [
     ]
 ]
 dependency_groups = [
-    "lint"
+    "test"
 ]
 
 [tool.tox.env.clean]
@@ -138,7 +149,7 @@ skip_install = true
 
 [tool.tox.env.bandit]
 description = "run bandit security scan"
-commands = [["bandit", "-r", "check_dns_auth", "-q"]]
+commands = [["bandit", "-r", "src", "-q"]]
 deps = ["bandit"]
 ignore_errors = true
 
@@ -150,18 +161,24 @@ ignore_errors = true
 
 [tool.tox.env.pydocstyle]
 description = "run pydocstyle"
-commands = [["pydocstyle", "check_dns_auth", "tests"]]
+commands = [["pydocstyle", "src", "tests"]]
 deps = ["pydocstyle"]
+ignore_errors = true
+
+[tool.tox.env.mypy]
+description = "run mypy"
+commands = [["mypy", "src/check_dns_auth"]]
+deps = ["mypy"]
 ignore_errors = true
 
 [tool.tox.env.pylint]
 description = "run pylint"
-commands = [["pylint", "check_dns_auth", "tests"]]
+commands = [["pylint", "src/check_dns_auth", "tests"]]
 deps = ["pylint"]
 ignore_errors = true
 
 [tool.tox.env.ruff]
 description = "run ruff"
-commands = [["ruff", "check", "check_dns_auth", "tests"]]
+commands = [["ruff", "check", "src", "tests"]]
 deps = ["ruff"]
 ignore_errors = true
