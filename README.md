@@ -84,6 +84,27 @@ check_dns_auth -z ZONE [options]
 | `-t`, `--timeout SECONDS` | Timeout for each individual DNS query (default: 5). |
 | `-v`, `--verbose` | Increase output verbosity (up to 3 times). |
 
+## Releasing
+
+Build and verify the source distribution and wheel before uploading:
+
+```
+python -m build
+twine check dist/*
+```
+
+Upload to TestPyPI first if you want a dry run:
+
+```
+twine upload --repository testpypi dist/*
+```
+
+Upload the final release to PyPI:
+
+```
+twine upload dist/*
+```
+
 # Acknowledgements
 
 This is initially inspired by Duane Wessels's perl plugin `check_zone_auth`.

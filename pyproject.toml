@@ -1,5 +1,6 @@
 [build-system]
-requires = ["setuptools"]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "check-dns-auth"
@@ -8,7 +9,8 @@ authors = [
     {name = "Matthew Pounsett", email = "matt@NimbusOps.com"}
 ]
 readme = "README.md"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 keywords = [
     "check",
     "dns",
@@ -21,6 +23,7 @@ requires-python = ">= 3.10"
 classifiers = [
     'Development Status :: 5 - Production/Stable',
     'Environment :: Plugins',
+    'Environment :: Console',
     'Intended Audience :: System Administrators',
     'Natural Language :: English',
     'Operating System :: Microsoft :: Windows',
@@ -65,7 +68,10 @@ dev = [
     "pymdown-extensions",
     "pytest",
     "pytest-cov",
+    "build",
     "setuptools",
+    "twine",
+    "keyring",
     "tox"
 ]
 test = [
