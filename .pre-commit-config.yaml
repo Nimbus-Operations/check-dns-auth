@@ -1,18 +1,18 @@
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.8
+    rev: v0.15.22
     hooks:
       - id: ruff
   - repo: https://github.com/PyCQA/isort
-    rev: 7.0.0
+    rev: 9.0.0b1
     hooks:
       - id: isort
         args:
           - check_dns_auth
           - tests
   - repo: https://github.com/PyCQA/bandit
-    rev: 1.9.2
+    rev: 1.9.4
     hooks:
       - id: bandit
         args: [ "-c", "pyproject.toml" ]
