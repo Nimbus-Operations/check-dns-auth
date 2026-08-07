@@ -86,4 +86,5 @@ check_dns_auth -z ZONE [options]
 
 # Acknowledgements
 
-This is initially inspired by Duane Wessels's perl plugin `check_zone_auth`.
+This is initially inspired by [Duane Wessels](https://github.com/wessels)'s
+perl plugin `check_zone_auth`.
