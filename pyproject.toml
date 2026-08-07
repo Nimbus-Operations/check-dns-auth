@@ -106,19 +106,19 @@ convention = "google"
 
 [tool.tox]
 envlist = [
-    "bandit",
     "clean",
+    "bandit",
     "pip-audit",
+    "mypy",
+    "ruff",
+    "pydocstyle",
+    "pylint",
     "py310",
     "py311",
     "py312",
     "py313",
     "py314",
-    "mypy",
-    "pydocstyle",
-    "pylint",
-    "ruff",
-    "stats"
+    "stats",
 ]
 skip_missing_interpreters = false
 
