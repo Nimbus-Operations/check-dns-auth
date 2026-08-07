@@ -57,3 +57,20 @@ jobs:
       - name: Build release distributions
         if: matrix.python-version == '3.14'
         run: uv build --no-sources
+
+  required:
+    name: Required
+    if: ${{ always() }}
+    needs:
+      - test
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Verify required jobs
+        env:
+          TEST_RESULT: ${{ needs.test.result }}
+        run: |
+          if [[ "$TEST_RESULT" != "success" ]]; then
+            echo "One or more required CI jobs did not succeed."
+            exit 1
+          fi
